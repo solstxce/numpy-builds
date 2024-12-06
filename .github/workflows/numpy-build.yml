@@ -28,7 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y gfortran libopenblas-dev liblapack-dev
+        sudo apt-get install -y gfortran libopenblas-dev liblapack-dev python3-distutils python3-dev
         pip install --upgrade pip setuptools wheel
 
     - name: Clone NumPy 1.18.5
@@ -37,10 +37,11 @@ jobs:
         cd numpy
         git checkout v1.18.5
 
-    - name: Build NumPy
+    - name: Build NumPy with adjusted configuration
       run: |
         cd numpy
-        python setup.py build
+        export CFLAGS="-std=c99"
+        python setup.py build --fcompiler=gnu95
         python setup.py bdist_wheel
 
     - name: Test NumPy
